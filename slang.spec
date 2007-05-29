@@ -108,7 +108,7 @@ to test slang scripts.
 
 %build
 %configure --includedir=%{_includedir}/slang
-%make static all
+make static all
 make check
 
 %install
