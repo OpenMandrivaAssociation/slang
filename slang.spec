@@ -1,15 +1,21 @@
-%define major 2
-%define minor 1
-%define	libname %mklibname %{name} %{major}
+%define name	slang
+%define version	2.1.1
+%define release	%mkrel 1
 
-%define with_pcre 1
-%define with_png 1
+%define major		2
+%define minor		1
+%define	libname		%mklibname %{name} %{major}
+%define develname	%mklibname %{name} -d
+%define staticname	%mklibname %{name} -s -d
+
+%define with_pcre	1
+%define with_png	1
 
 Summary:	The shared library for the S-Lang extension language
-Name:		slang
-Version:	%{major}.%{minor}.0
-Release:	%mkrel 1
-License:	GPL
+Name:		%{name}
+Version:	%{version}
+Release:	%{release}
+License:	GPLv2+
 Group:		System/Libraries
 URL:		http://www.s-lang.org
 Source0:	ftp://space.mit.edu/pub/davis/slang/v%{major}.%{minor}/slang-%{version}.tar.bz2
@@ -19,7 +25,6 @@ Source1:	ftp://space.mit.edu/pub/davis/slang/v%{major}.%{minor}/slang-%{version}
 Patch0: 	slang-2.1.0-no_glibc_private.patch
 # Fix install of slsh when slang 1 is installed on the system
 Patch1: 	slang-2.1.0-slsh_install.patch
-
 BuildRequires:	glibc-devel
 %if %{with_png}
 BuildRequires:	libpng-devel
@@ -53,15 +58,17 @@ The S-Lang library, provided in this package, provides the S-Lang
 extension language.  S-Lang's syntax resembles C, which makes it easy
 to recode S-Lang procedures in C if you need to.
 
-%package -n	%{libname}-devel
+%package -n	%{develname}
 Summary:	The library and header files for development using S-Lang
 Group:		Development/C
-Provides:	lib%{name}-devel slang-devel
+Provides:	lib%{name}-devel 
+Provides:	%{name}-devel = %{version}-%{release}
 Obsoletes:	slang-devel
+Obsoletes:	%{mklibname slang 2 -d}
 Requires:	%{libname} = %{version}
-Conflicts:	libslang1-devel
+Conflicts:	%{mklibname slang 1 -d}
 
-%description -n	%{libname}-devel
+%description -n	%{develname}
 This package contains the S-Lang extension language libraries and
 header files which you'll need if you want to develop S-Lang based
 applications.  Documentation which may help you write S-Lang based
@@ -70,13 +77,15 @@ applications is also included.
 Install the slang-devel package if you want to develop applications
 based on the S-Lang extension language.
 
-%package -n %{libname}-static-devel
+%package -n %{staticname}
 Summary:	Static development files for %{name}
 Group:		Development/C
-Requires:	%{libname}-devel = %{version}-%{release}
-Provides:	lib%{name}-static-devel slang-static-devel
+Requires:	%{develname} = %{version}-%{release}
+Provides:	lib%{name}-static-devel
+Provides:	%{name}-static-devel = %{version}-%{release}
+Obsoletes:	%{mklibname slang 2 -d -s}
 
-%description -n %{libname}-static-devel
+%description -n %{staticname}
 Static development files for %{name}.
 
 %package	doc
@@ -136,13 +145,13 @@ rm -rf %{buildroot}
 %dir %{_libdir}/slang
 %{_libdir}/slang/v%{major}
 
-%files -n %{libname}-devel
+%files -n %{develname}
 %defattr(-,root,root)
 %{_libdir}/libslang.so
 %dir %{_includedir}/slang/
 %{_includedir}/slang/*.h
 
-%files -n %{libname}-static-devel
+%files -n %{staticname}
 %defattr(-,root,root)
 %{_libdir}/libslang.a
 
