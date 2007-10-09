@@ -45,7 +45,7 @@ extension language.  S-Lang's syntax resembles C, which makes it easy
 to recode S-Lang procedures in C if you need to.
 
 %package -n	%{libname}
-Summary:	The shared library for the S-Lang extension language.
+Summary:	The shared library for the S-Lang extension language
 Group:		System/Libraries
 Provides:	slang
 Obsoletes:	slang
