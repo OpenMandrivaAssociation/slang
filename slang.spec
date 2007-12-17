@@ -34,7 +34,6 @@ BuildRequires:	libtool
 BuildRequires:	pcre-devel
 %endif
 
-Buildroot:	%{_tmppath}/slang-root
 
 %description
 S-Lang is an interpreted language and a programming library.  The
