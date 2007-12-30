@@ -1,5 +1,5 @@
 %define name	slang
-%define version	2.1.1
+%define version	2.1.3
 %define release	%mkrel 1
 
 %define major		2
@@ -19,7 +19,7 @@ License:	GPLv2+
 Group:		System/Libraries
 URL:		http://www.s-lang.org
 Source0:	ftp://space.mit.edu/pub/davis/slang/v%{major}.%{minor}/slang-%{version}.tar.bz2
-Source1:	ftp://space.mit.edu/pub/davis/slang/v%{major}.%{minor}/slang-%{version}.tar.bz2.sig
+Source1:	%{SOURCE0}.asc
 # Do not use glibc private symbol (fedora bug #161536)
 # See fedora package for a patch against newer slang
 Patch0: 	slang-2.1.0-no_glibc_private.patch
@@ -115,13 +115,15 @@ to test slang scripts.
 %patch1 -p1 -b .slsh_install
 
 %build
-%configure --includedir=%{_includedir}/slang
-make static all
+%configure2_5x --includedir=%{_includedir}/slang
+%make static all
+
+%check
 make check
 
 %install
 rm -rf %{buildroot}
-make DESTDIR=%{buildroot} install-static install
+%makeinstall_std DESTDIR=%{buildroot} install-static install
 
 # Remove unwanted files
 %if !%{with_pcre}
@@ -160,6 +162,7 @@ rm -rf %{buildroot}
 
 %files slsh
 %defattr(-,root,root)
+%doc %{_docdir}/slsh
 %{_bindir}/slsh
 %{_datadir}/slsh
 %{_mandir}/man1/slsh.1*
