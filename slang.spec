@@ -23,9 +23,10 @@ Source1:	%{SOURCE0}.asc
 # Do not use glibc private symbol (fedora bug #161536)
 # See fedora package for a patch against newer slang
 Patch0: 	slang-2.1.0-no_glibc_private.patch
-# Fix install of slsh when slang 1 is installed on the system
-Patch1: 	slang-2.1.0-slsh_install.patch
+Patch2:		slang-2.1.3-makefile.patch
+Patch3:		slang-LANG.patch
 BuildRequires:	glibc-devel
+BuildRequires:	X11-devel
 %if %{with_png}
 BuildRequires:	libpng-devel
 %endif
@@ -33,7 +34,6 @@ BuildRequires:	libtool
 %if %{with_pcre}
 BuildRequires:	pcre-devel
 %endif
-
 
 %description
 S-Lang is an interpreted language and a programming library.  The
@@ -112,7 +112,8 @@ to test slang scripts.
 %prep
 %setup -q
 %patch0 -p1 -b .no_glibc_private
-%patch1 -p1 -b .slsh_install
+%patch2 -p1
+%patch3 -p1
 
 %build
 %configure2_5x --includedir=%{_includedir}/slang
