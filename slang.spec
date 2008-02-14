@@ -17,6 +17,7 @@ Version:	%{version}
 Release:	%{release}
 License:	GPLv2+
 Group:		System/Libraries
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 URL:		http://www.s-lang.org
 Source0:	ftp://space.mit.edu/pub/davis/slang/v%{major}.%{minor}/slang-%{version}.tar.bz2
 Source1:	%{SOURCE0}.asc
