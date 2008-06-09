@@ -135,9 +135,13 @@ rm -f %{buildroot}%{_libdir}/slang/v%{major}/modules/pcre-module.so
 rm -f %{buildroot}%{_libdir}/slang/v%{major}/modules/png-module.so
 %endif
 
+%if %mdkversion < 200900
 %post -n %{libname} -p /sbin/ldconfig
+%endif
 
+%if %mdkversion < 200900
 %postun -n %{libname} -p /sbin/ldconfig
+%endif
 
 %clean
 rm -rf %{buildroot}
