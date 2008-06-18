@@ -1,6 +1,6 @@
 %define name	slang
 %define version	2.1.3
-%define release	%mkrel 1
+%define release	%mkrel 2
 
 %define major		2
 %define minor		1
