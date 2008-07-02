@@ -1,7 +1,3 @@
-%define name	slang
-%define version	2.1.3
-%define release	%mkrel 2
-
 %define major		2
 %define minor		1
 %define	libname		%mklibname %{name} %{major}
@@ -12,12 +8,11 @@
 %define with_png	1
 
 Summary:	The shared library for the S-Lang extension language
-Name:		%{name}
-Version:	%{version}
-Release:	%{release}
+Name:		slang
+Version:	2.1.3
+Release:	%mkrel 3
 License:	GPLv2+
 Group:		System/Libraries
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 URL:		http://www.s-lang.org
 Source0:	ftp://space.mit.edu/pub/davis/slang/v%{major}.%{minor}/slang-%{version}.tar.bz2
 Source1:	%{SOURCE0}.asc
@@ -35,6 +30,7 @@ BuildRequires:	libtool
 %if %{with_pcre}
 BuildRequires:	pcre-devel
 %endif
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 S-Lang is an interpreted language and a programming library.  The
