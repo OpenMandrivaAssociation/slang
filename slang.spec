@@ -21,6 +21,7 @@ Source1:	%{SOURCE0}.asc
 Patch0: 	slang-2.1.0-no_glibc_private.patch
 Patch2:		slang-2.1.3-makefile.patch
 Patch3:		slang-LANG.patch
+Patch4:		slang-SLANG_LIB_FOR_MODULES.diff
 BuildRequires:	glibc-devel
 BuildRequires:	X11-devel
 %if %{with_png}
@@ -30,6 +31,7 @@ BuildRequires:	libtool
 %if %{with_pcre}
 BuildRequires:	pcre-devel
 %endif
+BuildConflicts:	slang-devel
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
@@ -107,10 +109,12 @@ slsh is a program that embeds the S-Lang interpreter and may be used
 to test slang scripts.
 
 %prep
+
 %setup -q
 %patch0 -p1 -b .no_glibc_private
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %build
 %configure2_5x --includedir=%{_includedir}/slang
@@ -121,6 +125,7 @@ make check
 
 %install
 rm -rf %{buildroot}
+
 %makeinstall_std DESTDIR=%{buildroot} install-static install
 
 # Remove unwanted files
