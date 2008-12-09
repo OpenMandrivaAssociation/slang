@@ -1,11 +1,12 @@
-%define major		2
-%define minor		1
-%define	libname		%mklibname %{name} %{major}
-%define develname	%mklibname %{name} -d
-%define staticname	%mklibname %{name} -s -d
+%define major 2
+%define minor 1
+%define	libname %mklibname %{name} %{major}
+%define develname %mklibname %{name} -d
+%define staticname %mklibname %{name} -s -d
 
 %define with_pcre	1
 %define with_png	1
+%define with_onig	0
 
 Summary:	The shared library for the S-Lang extension language
 Name:		slang
@@ -19,7 +20,7 @@ Source1:	%{SOURCE0}.asc
 # Do not use glibc private symbol (fedora bug #161536)
 # See fedora package for a patch against newer slang
 Patch0: 	slang-2.1.0-no_glibc_private.patch
-Patch2:		slang-2.1.3-makefile.patch
+Patch2:		slang-2.1.4-makefile.patch
 Patch3:		slang-LANG.patch
 Patch4:		slang-SLANG_LIB_FOR_MODULES.diff
 BuildRequires:	glibc-devel
@@ -30,6 +31,9 @@ BuildRequires:	libpng-devel
 BuildRequires:	libtool
 %if %{with_pcre}
 BuildRequires:	pcre-devel
+%endif
+%if %{with_onig}
+BuildRequires:	onig-devel
 %endif
 BuildConflicts:	slang-devel
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -42,11 +46,11 @@ The S-Lang library, provided in this package, provides the S-Lang
 extension language.  S-Lang's syntax resembles C, which makes it easy
 to recode S-Lang procedures in C if you need to.
 
-%package -n	%{libname}
+%package -n %{libname}
 Summary:	The shared library for the S-Lang extension language
 Group:		System/Libraries
 Provides:	slang
-Obsoletes:	slang
+Obsoletes:	slang < 2.1.4
 
 %description -n	%{libname}
 S-Lang is an interpreted language and a programming library.  The
@@ -56,12 +60,12 @@ The S-Lang library, provided in this package, provides the S-Lang
 extension language.  S-Lang's syntax resembles C, which makes it easy
 to recode S-Lang procedures in C if you need to.
 
-%package -n	%{develname}
+%package -n %{develname}
 Summary:	The library and header files for development using S-Lang
 Group:		Development/C
-Provides:	lib%{name}-devel 
+Provides:	lib%{name}-devel = %{version}-%{release}
 Provides:	%{name}-devel = %{version}-%{release}
-Obsoletes:	slang-devel
+Obsoletes:	slang-devel < 2.1.4
 Obsoletes:	%{mklibname slang 2 -d}
 Requires:	%{libname} = %{version}
 Conflicts:	%{mklibname slang 1 -d}
@@ -79,18 +83,18 @@ based on the S-Lang extension language.
 Summary:	Static development files for %{name}
 Group:		Development/C
 Requires:	%{develname} = %{version}-%{release}
-Provides:	lib%{name}-static-devel
+Provides:	lib%{name}-static-devel = %{version}-%{release}
 Provides:	%{name}-static-devel = %{version}-%{release}
 Obsoletes:	%{mklibname slang 2 -d -s}
 
 %description -n %{staticname}
 Static development files for %{name}.
 
-%package	doc
+%package doc
 Summary:	Extra documentation for slang libraries
 Group:		Books/Computer books
 
-%description	doc
+%description doc
 This package contains documentation about S-Lang.
 S-Lang is an interpreted language and a programming library.  The
 S-Lang language was designed so that it can be easily embedded into
@@ -99,7 +103,7 @@ The S-Lang library, provided in this package, provides the S-Lang
 extension language.  S-Lang's syntax resembles C, which makes it easy
 to recode S-Lang procedures in C if you need to.
 
-%package	slsh
+%package slsh
 Summary:	S-Lang script interpreter
 Group:		Shells
 Provides:	%{_bindir}/slsh
@@ -117,7 +121,18 @@ to test slang scripts.
 %patch4 -p1
 
 %build
-%configure2_5x --includedir=%{_includedir}/slang
+%configure2_5x \
+	--includedir=%{_includedir}/slang \
+	%if %{with_onig}
+	--with-onig \
+	%endif
+	%if %{with_png}
+	--with-png \
+	%endif
+	%if %{with_pcre}
+	--with-pcre
+	%endif
+
 %make static all
 
 %check
@@ -134,6 +149,9 @@ rm -f %{buildroot}%{_libdir}/slang/v%{major}/modules/pcre-module.so
 %endif
 %if !%{with_png}
 rm -f %{buildroot}%{_libdir}/slang/v%{major}/modules/png-module.so
+%endif
+%if !%{with_onig}
+rm -f %{buildroot}%{_libdir}/slang/v%{major}/modules/onig-module.so
 %endif
 
 %if %mdkversion < 200900
