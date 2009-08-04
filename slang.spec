@@ -10,7 +10,7 @@
 
 Summary:	The shared library for the S-Lang extension language
 Name:		slang
-Version:	2.1.4
+Version:	2.2.0
 Release:	%mkrel 1
 License:	GPLv2+
 Group:		System/Libraries
