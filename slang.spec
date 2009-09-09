@@ -1,5 +1,5 @@
 %define major 2
-%define minor 1
+%define minor 2
 %define	libname %mklibname %{name} %{major}
 %define develname %mklibname %{name} -d
 %define staticname %mklibname %{name} -s -d
@@ -10,12 +10,12 @@
 
 Summary:	The shared library for the S-Lang extension language
 Name:		slang
-Version:	2.2.0
+Version:	2.2.1
 Release:	%mkrel 1
 License:	GPLv2+
 Group:		System/Libraries
 URL:		http://www.s-lang.org
-Source0:	ftp://space.mit.edu/pub/davis/slang/v%{major}.%{minor}/slang-%{version}.tar.bz2
+Source0:	ftp://ftp.fu-berlin.de/pub/unix/misc/slang/v%{major}.%{minor}/slang-%{version}.tar.bz2
 Source1:	%{SOURCE0}.asc
 # Do not use glibc private symbol (fedora bug #161536)
 # See fedora package for a patch against newer slang
@@ -176,6 +176,7 @@ rm -rf %{buildroot}
 %{_libdir}/libslang.so
 %dir %{_includedir}/slang/
 %{_includedir}/slang/*.h
+%{_libdir}/pkgconfig/slang.pc
 
 %files -n %{staticname}
 %defattr(-,root,root)
