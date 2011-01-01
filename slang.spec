@@ -22,8 +22,6 @@ Source1:	%{SOURCE0}.asc
 Patch0: 	slang-2.1.0-no_glibc_private.patch
 Patch2:		slang-2.2.2-makefile.patch
 Patch4:		slang-SLANG_LIB_FOR_MODULES.diff
-BuildRequires:	glibc-devel
-BuildRequires:	X11-devel
 %if %{with_png}
 BuildRequires:	libpng-devel
 %endif
