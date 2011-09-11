@@ -11,7 +11,7 @@
 Summary:	The shared library for the S-Lang extension language
 Name:		slang
 Version:	2.2.2
-Release:	%mkrel 3
+Release:	%mkrel 4
 License:	GPLv2+
 Group:		System/Libraries
 URL:		http://www.s-lang.org
