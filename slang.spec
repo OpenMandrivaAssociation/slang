@@ -10,18 +10,15 @@
 
 Summary:	The shared library for the S-Lang extension language
 Name:		slang
-Version:	2.2.2
-Release:	%mkrel 4
+Version:	2.2.4
+Release:	%mkrel 1
 License:	GPLv2+
 Group:		System/Libraries
 URL:		http://www.s-lang.org
 Source0:	ftp://ftp.fu-berlin.de/pub/unix/misc/slang/v%{major}.%{minor}/slang-%{version}.tar.bz2
 Source1:	%{SOURCE0}.asc
-# Do not use glibc private symbol (fedora bug #161536)
-# See fedora package for a patch against newer slang
-Patch0: 	slang-2.1.0-no_glibc_private.patch
-Patch2:		slang-2.2.2-makefile.patch
-Patch4:		slang-SLANG_LIB_FOR_MODULES.diff
+Patch5:		slang-2.2.4-slsh-makefile.patch
+Patch6:		slang-2.2.4-modules-makefile.patch
 %if %{with_png}
 BuildRequires:	libpng-devel
 %endif
@@ -112,9 +109,8 @@ to test slang scripts.
 %prep
 
 %setup -q
-%patch0 -p1 -b .no_glibc_private
-%patch2 -p1
-%patch4 -p1
+%patch5 -p1
+%patch6 -p1
 
 %build
 %configure2_5x \
@@ -129,7 +125,7 @@ to test slang scripts.
 	--with-pcre
 	%endif
 
-%make static all
+%make -j1
 
 %check
 make check
