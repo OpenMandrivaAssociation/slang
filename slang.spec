@@ -11,7 +11,7 @@
 Summary:	The shared library for the S-Lang extension language
 Name:		slang
 Version:	2.2.4
-Release:	%mkrel 1
+Release:	%mkrel 2
 License:	GPLv2+
 Group:		System/Libraries
 URL:		http://www.s-lang.org
@@ -30,7 +30,6 @@ BuildRequires:	pcre-devel
 BuildRequires:	onig-devel
 %endif
 BuildConflicts:	slang-devel
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 S-Lang is an interpreted language and a programming library.  The
@@ -145,17 +144,6 @@ rm -f %{buildroot}%{_libdir}/slang/v%{major}/modules/png-module.so
 %if !%{with_onig}
 rm -f %{buildroot}%{_libdir}/slang/v%{major}/modules/onig-module.so
 %endif
-
-%if %mdkversion < 200900
-%post -n %{libname} -p /sbin/ldconfig
-%endif
-
-%if %mdkversion < 200900
-%postun -n %{libname} -p /sbin/ldconfig
-%endif
-
-%clean
-rm -rf %{buildroot}
 
 %files -n %{libname}
 %defattr(-,root,root)
