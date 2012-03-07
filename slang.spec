@@ -55,7 +55,6 @@ to recode S-Lang procedures in C if you need to.
 %package -n	%{devname}
 Summary:	The library and header files for development using S-Lang
 Group:		Development/C
-Provides:	lib%{name}-devel = %{version}-%{release}
 Provides:	%{name}-devel = %{version}-%{release}
 Obsoletes:	slang-devel < 2.1.4
 Obsoletes:	%{mklibname slang 2 -d}
@@ -75,7 +74,6 @@ based on the S-Lang extension language.
 Summary:	Static development files for %{name}
 Group:		Development/C
 Requires:	%{devname} = %{version}-%{release}
-Provides:	lib%{name}-static-devel = %{version}-%{release}
 Provides:	%{name}-static-devel = %{version}-%{release}
 Obsoletes:	%{mklibname slang 2 -d -s}
 
