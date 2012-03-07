@@ -29,7 +29,6 @@ BuildRequires:	pcre-devel
 %if %{with onig}
 BuildRequires:	onig-devel
 %endif
-BuildConflicts:	slang-devel
 
 %description
 S-Lang is an interpreted language and a programming library.  The
