@@ -146,4 +146,4 @@ make check
 %{_bindir}/slsh
 %{_datadir}/slsh
 %{_mandir}/man1/slsh.1*
-%config %{_sysconfdir}/slsh.rc
+%config(noreplace) %{_sysconfdir}/slsh.rc
