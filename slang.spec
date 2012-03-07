@@ -1,17 +1,17 @@
-%define major 2
-%define minor 2
+%define	major	2
+%define	minor	2
 %define	libname %mklibname %{name} %{major}
-%define develname %mklibname %{name} -d
-%define staticname %mklibname %{name} -s -d
+%define	devname %mklibname %{name} -d
+%define	static	%mklibname %{name} -s -d
 
-%define with_pcre	1
-%define with_png	1
-%define with_onig	0
+%bcond_without	pcre
+%bcond_without	png
+%bcond_with	onig
 
 Summary:	The shared library for the S-Lang extension language
 Name:		slang
 Version:	2.2.4
-Release:	%mkrel 2
+Release:	3
 License:	GPLv2+
 Group:		System/Libraries
 URL:		http://www.s-lang.org
@@ -19,14 +19,14 @@ Source0:	ftp://ftp.fu-berlin.de/pub/unix/misc/slang/v%{major}.%{minor}/slang-%{v
 Source1:	%{SOURCE0}.asc
 Patch5:		slang-2.2.4-slsh-makefile.patch
 Patch6:		slang-2.2.4-modules-makefile.patch
-%if %{with_png}
+%if %{with png}
 BuildRequires:	libpng-devel
 %endif
 BuildRequires:	libtool
-%if %{with_pcre}
+%if %{with pcre}
 BuildRequires:	pcre-devel
 %endif
-%if %{with_onig}
+%if %{with onig}
 BuildRequires:	onig-devel
 %endif
 BuildConflicts:	slang-devel
@@ -39,7 +39,7 @@ The S-Lang library, provided in this package, provides the S-Lang
 extension language.  S-Lang's syntax resembles C, which makes it easy
 to recode S-Lang procedures in C if you need to.
 
-%package -n %{libname}
+%package -n	%{libname}
 Summary:	The shared library for the S-Lang extension language
 Group:		System/Libraries
 Provides:	slang
@@ -53,7 +53,7 @@ The S-Lang library, provided in this package, provides the S-Lang
 extension language.  S-Lang's syntax resembles C, which makes it easy
 to recode S-Lang procedures in C if you need to.
 
-%package -n %{develname}
+%package -n	%{devname}
 Summary:	The library and header files for development using S-Lang
 Group:		Development/C
 Provides:	lib%{name}-devel = %{version}-%{release}
@@ -63,7 +63,7 @@ Obsoletes:	%{mklibname slang 2 -d}
 Requires:	%{libname} = %{version}
 Conflicts:	%{mklibname slang 1 -d}
 
-%description -n	%{develname}
+%description -n	%{devname}
 This package contains the S-Lang extension language libraries and
 header files which you'll need if you want to develop S-Lang based
 applications.  Documentation which may help you write S-Lang based
@@ -72,22 +72,22 @@ applications is also included.
 Install the slang-devel package if you want to develop applications
 based on the S-Lang extension language.
 
-%package -n %{staticname}
+%package -n	%{static}
 Summary:	Static development files for %{name}
 Group:		Development/C
-Requires:	%{develname} = %{version}-%{release}
+Requires:	%{devname} = %{version}-%{release}
 Provides:	lib%{name}-static-devel = %{version}-%{release}
 Provides:	%{name}-static-devel = %{version}-%{release}
 Obsoletes:	%{mklibname slang 2 -d -s}
 
-%description -n %{staticname}
+%description -n	%{static}
 Static development files for %{name}.
 
-%package doc
+%package	doc
 Summary:	Extra documentation for slang libraries
 Group:		Books/Computer books
 
-%description doc
+%description	doc
 This package contains documentation about S-Lang.
 S-Lang is an interpreted language and a programming library.  The
 S-Lang language was designed so that it can be easily embedded into
@@ -96,12 +96,12 @@ The S-Lang library, provided in this package, provides the S-Lang
 extension language.  S-Lang's syntax resembles C, which makes it easy
 to recode S-Lang procedures in C if you need to.
 
-%package slsh
+%package	slsh
 Summary:	S-Lang script interpreter
 Group:		Shells
 Provides:	%{_bindir}/slsh
 
-%description slsh
+%description	slsh
 slsh is a program that embeds the S-Lang interpreter and may be used
 to test slang scripts.
 
@@ -112,17 +112,22 @@ to test slang scripts.
 %patch6 -p1
 
 %build
-%configure2_5x \
-	--includedir=%{_includedir}/slang \
-	%if %{with_onig}
-	--with-onig \
-	%endif
-	%if %{with_png}
-	--with-png \
-	%endif
-	%if %{with_pcre}
-	--with-pcre
-	%endif
+%configure2_5x	--includedir=%{_includedir}/slang \
+%if %{with onig}
+		--with-onig \
+%else
+		--without-onig \
+%endif
+%if %{with png}
+		--with-png \
+%else
+		--without-png \
+%endif
+%if %{with pcre}
+		--with-pcre
+%else
+		--without-pcre
+%endif
 
 %make -j1
 
@@ -130,44 +135,26 @@ to test slang scripts.
 make check
 
 %install
-rm -rf %{buildroot}
-
-%makeinstall_std DESTDIR=%{buildroot} install-static install
-
-# Remove unwanted files
-%if !%{with_pcre}
-rm -f %{buildroot}%{_libdir}/slang/v%{major}/modules/pcre-module.so
-%endif
-%if !%{with_png}
-rm -f %{buildroot}%{_libdir}/slang/v%{major}/modules/png-module.so
-%endif
-%if !%{with_onig}
-rm -f %{buildroot}%{_libdir}/slang/v%{major}/modules/onig-module.so
-%endif
+%makeinstall_std install-static
 
 %files -n %{libname}
-%defattr(-,root,root)
 %{_libdir}/libslang.so.%{major}*
 %dir %{_libdir}/slang
 %{_libdir}/slang/v%{major}
 
-%files -n %{develname}
-%defattr(-,root,root)
+%files -n %{devname}
 %{_libdir}/libslang.so
 %dir %{_includedir}/slang/
 %{_includedir}/slang/*.h
 %{_libdir}/pkgconfig/slang.pc
 
-%files -n %{staticname}
-%defattr(-,root,root)
+%files -n %{static}
 %{_libdir}/libslang.a
 
 %files doc
-%defattr(-,root,root)
 %{_defaultdocdir}/slang
 
 %files slsh
-%defattr(-,root,root)
 %doc %{_docdir}/slsh
 %{_bindir}/slsh
 %{_datadir}/slsh
