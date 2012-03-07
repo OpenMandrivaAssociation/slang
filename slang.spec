@@ -1,5 +1,6 @@
 %define	major	2
 %define	minor	2
+%define	modules	%{mklibname %{name}}-modules
 %define	libname %mklibname %{name} %{major}
 %define	devname %mklibname %{name} -d
 %define	static	%mklibname %{name} -s -d
@@ -34,9 +35,18 @@ The S-Lang library, provided in this package, provides the S-Lang
 extension language.  S-Lang's syntax resembles C, which makes it easy
 to recode S-Lang procedures in C if you need to.
 
+%package -n	%{modules}
+Summary:	Modules for the S-Lang extension language
+Group:		Development/Other
+Conflicts:	%{libname} < 2.2.4-3
+
+%description -n	%{modules}
+This package contains the main modules for the S-Lang extension language.
+
 %package -n	%{libname}
 Summary:	The shared library for the S-Lang extension language
 Group:		System/Libraries
+Requires:	%{modules} = %{EVRD}
 
 %description -n	%{libname}
 S-Lang is an interpreted language and a programming library.  The
@@ -112,10 +122,12 @@ make check
 %install
 %makeinstall_std install-static
 
-%files -n %{libname}
-%{_libdir}/libslang.so.%{major}*
+%files -n %{modules}
 %dir %{_libdir}/slang
 %{_libdir}/slang/v%{major}
+
+%files -n %{libname}
+%{_libdir}/libslang.so.%{major}*
 
 %files -n %{devname}
 %{_libdir}/libslang.so
