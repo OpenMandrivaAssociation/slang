@@ -41,8 +41,6 @@ to recode S-Lang procedures in C if you need to.
 %package -n	%{libname}
 Summary:	The shared library for the S-Lang extension language
 Group:		System/Libraries
-Provides:	slang
-Obsoletes:	slang < 2.1.4
 
 %description -n	%{libname}
 S-Lang is an interpreted language and a programming library.  The
@@ -56,10 +54,7 @@ to recode S-Lang procedures in C if you need to.
 Summary:	The library and header files for development using S-Lang
 Group:		Development/C
 Provides:	%{name}-devel = %{version}-%{release}
-Obsoletes:	slang-devel < 2.1.4
-Obsoletes:	%{mklibname slang 2 -d}
 Requires:	%{libname} = %{version}
-Conflicts:	%{mklibname slang 1 -d}
 
 %description -n	%{devname}
 This package contains the S-Lang extension language libraries and
@@ -75,7 +70,6 @@ Summary:	Static development files for %{name}
 Group:		Development/C
 Requires:	%{devname} = %{version}-%{release}
 Provides:	%{name}-static-devel = %{version}-%{release}
-Obsoletes:	%{mklibname slang 2 -d -s}
 
 %description -n	%{static}
 Static development files for %{name}.
