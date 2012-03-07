@@ -53,8 +53,8 @@ to recode S-Lang procedures in C if you need to.
 %package -n	%{devname}
 Summary:	The library and header files for development using S-Lang
 Group:		Development/C
-Provides:	%{name}-devel = %{version}-%{release}
-Requires:	%{libname} = %{version}
+Provides:	%{name}-devel = %{EVRD}
+Requires:	%{libname} = %{EVRD}
 
 %description -n	%{devname}
 This package contains the S-Lang extension language libraries and
@@ -68,8 +68,8 @@ based on the S-Lang extension language.
 %package -n	%{static}
 Summary:	Static development files for %{name}
 Group:		Development/C
-Requires:	%{devname} = %{version}-%{release}
-Provides:	%{name}-static-devel = %{version}-%{release}
+Requires:	%{devname} = %{EVRD}
+Provides:	%{name}-static-devel = %{EVRD}
 
 %description -n	%{static}
 Static development files for %{name}.
