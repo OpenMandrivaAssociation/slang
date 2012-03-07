@@ -21,9 +21,9 @@ Patch5:		slang-2.2.4-slsh-makefile.patch
 Patch6:		slang-2.2.4-modules-makefile.patch
 Patch7:		slang-2.2.4-perms.patch
 Patch8:		slang-2.2.4-no-rpath.patch
-BuildRequires:	libpng-devel
+BuildRequires:	pkgconfig(libpng)
 BuildRequires:	libtool
-BuildRequires:	pcre-devel
+BuildRequires:	pkgconfig(libpcre)
 BuildRequires:	onig-devel
 
 %description
@@ -100,8 +100,8 @@ to test slang scripts.
 %patch8 -p1 -b .norpath~
 
 %build
-%configure2_5x	--with-{pcre,onig,png,z}lib=%{_libdir} \
-		--with-{pcre,onig,png,z}inc=%{_includedir} \
+%configure2_5x	--with-{onig,pcre,png,z}lib=%{_libdir} \
+		--with-{onig,pcre,png,z}inc=%{_includedir} \
 		--includedir=%{_includedir}/slang
 
 %make
