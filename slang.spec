@@ -114,7 +114,7 @@ to test slang scripts.
 		--with-{onig,pcre,png,z}inc=%{_includedir} \
 		--includedir=%{_includedir}/slang
 
-%make
+make
 
 %check
 make check
