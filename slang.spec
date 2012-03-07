@@ -19,6 +19,7 @@ Source0:	ftp://ftp.fu-berlin.de/pub/unix/misc/slang/v%{major}.%{minor}/slang-%{v
 Source1:	%{SOURCE0}.asc
 Patch5:		slang-2.2.4-slsh-makefile.patch
 Patch6:		slang-2.2.4-modules-makefile.patch
+Patch7:		slang-2.2.4-perms.patch
 %if %{with png}
 BuildRequires:	libpng-devel
 %endif
@@ -97,10 +98,10 @@ slsh is a program that embeds the S-Lang interpreter and may be used
 to test slang scripts.
 
 %prep
-
 %setup -q
 %patch5 -p1
 %patch6 -p1
+%patch7 -p1 -b .lib_exec~
 
 %build
 %configure2_5x	--includedir=%{_includedir}/slang \
@@ -120,7 +121,7 @@ to test slang scripts.
 		--without-pcre
 %endif
 
-%make -j1
+%make
 
 %check
 make check
