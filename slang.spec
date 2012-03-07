@@ -21,16 +21,10 @@ Patch5:		slang-2.2.4-slsh-makefile.patch
 Patch6:		slang-2.2.4-modules-makefile.patch
 Patch7:		slang-2.2.4-perms.patch
 Patch8:		slang-2.2.4-no-rpath.patch
-%if %{with png}
 BuildRequires:	libpng-devel
-%endif
 BuildRequires:	libtool
-%if %{with pcre}
 BuildRequires:	pcre-devel
-%endif
-%if %{with onig}
 BuildRequires:	onig-devel
-%endif
 
 %description
 S-Lang is an interpreted language and a programming library.  The
@@ -106,22 +100,9 @@ to test slang scripts.
 %patch8 -p1 -b .norpath~
 
 %build
-%configure2_5x	--includedir=%{_includedir}/slang \
-%if %{with onig}
-		--with-onig \
-%else
-		--without-onig \
-%endif
-%if %{with png}
-		--with-png \
-%else
-		--without-png \
-%endif
-%if %{with pcre}
-		--with-pcre
-%else
-		--without-pcre
-%endif
+%configure2_5x	--with-{pcre,onig,png,z}lib=%{_libdir} \
+		--with-{pcre,onig,png,z}inc=%{_includedir} \
+		--includedir=%{_includedir}/slang
 
 %make
 
