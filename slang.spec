@@ -8,11 +8,13 @@
 %bcond_without	pcre
 %bcond_without	png
 %bcond_with	onig
+%bcond_without	diet
+%bcond_without	uclibc
 
 Summary:	The shared library for the S-Lang extension language
 Name:		slang
 Version:	2.2.4
-Release:	3
+Release:	4
 License:	GPLv2+
 Group:		System/Libraries
 URL:		http://www.s-lang.org
@@ -108,8 +110,33 @@ to test slang scripts.
 %patch6 -p1
 %patch7 -p1 -b .lib_exec~
 %patch8 -p1 -b .norpath~
+%if %{with diet}
+mkdir diet
+cp -r autoconf configure doc demo mkfiles modules slang.lis slsh src utf8 changes.txt COPYING diet
+%endif
+
+%if %{with uclibc}
+mkdir uclibc
+cp -r autoconf configure doc demo mkfiles modules slang.lis slsh src utf8 changes.txt COPYING uclibc
+%endif
 
 %build
+%if %{with diet}
+pushd diet
+CC="diet gcc" CFLAGS="-Os -g" \
+./configure
+%make -C src/ static
+popd
+%endif
+
+%if %{with uclibc}
+pushd uclibc
+CC="%{uclibc_cc}" CFLAGS="%{uclibc_cflags}" \
+./configure
+%make -C src/ static
+popd
+%endif
+
 %configure2_5x	--with-{onig,pcre,png,z}lib=%{_libdir} \
 		--with-{onig,pcre,png,z}inc=%{_includedir} \
 		--includedir=%{_includedir}/slang
@@ -121,6 +148,14 @@ make check
 
 %install
 %makeinstall_std install-static
+
+%if %{with diet}
+install -m644 diet/src/objs/libslang.a -D %{buildroot}%{_prefix}/lib/dietlibc/lib-%{_arch}/libslang.a
+%endif
+
+%if %{with uclibc}
+install -m644 uclibc/src/objs/libslang.a -D %{buildroot}%{_prefix}/uclibc%{_libdir}/libslang.a
+%endif
 
 %files -n %{modules}
 %dir %{_libdir}/slang
@@ -137,6 +172,12 @@ make check
 
 %files -n %{static}
 %{_libdir}/libslang.a
+%if %{with diet}
+%{_prefix}/lib/dietlibc/lib-%{_arch}/libslang.a
+%endif
+%if %{with uclibc}
+%{_prefix}/uclibc%{_libdir}/libslang.a
+%endif
 
 %files doc
 %{_defaultdocdir}/slang
