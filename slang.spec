@@ -28,6 +28,12 @@ BuildRequires:	pkgconfig(libpng)
 BuildRequires:	libtool
 BuildRequires:	pkgconfig(libpcre)
 BuildRequires:	onig-devel
+%if %{with diet}
+BuildRequires:	dietlibc-devel
+%endif
+%if %{with uclibc}
+BuildRequires:	uClibc-devel >= 0.9.33.2-3
+%endif
 
 %description
 S-Lang is an interpreted language and a programming library.  The
