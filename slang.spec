@@ -14,7 +14,7 @@
 Summary:	The shared library for the S-Lang extension language
 Name:		slang
 Version:	2.2.4
-Release:	4
+Release:	5
 License:	GPLv2+
 Group:		System/Libraries
 URL:		http://www.s-lang.org
@@ -63,6 +63,20 @@ a program to provide the program with a powerful extension language.
 The S-Lang library, provided in this package, provides the S-Lang
 extension language.  S-Lang's syntax resembles C, which makes it easy
 to recode S-Lang procedures in C if you need to.
+
+%if %{with uclibc}
+%package -n	uclibc-%{libname}
+Summary:	The shared library for the S-Lang extension language linked against uClibc
+Group:		System/Libraries
+
+%description -n	uclibc-%{libname}
+S-Lang is an interpreted language and a programming library.  The
+S-Lang language was designed so that it can be easily embedded into
+a program to provide the program with a powerful extension language.
+The S-Lang library, provided in this package, provides the S-Lang
+extension language.  S-Lang's syntax resembles C, which makes it easy
+to recode S-Lang procedures in C if you need to.
+%endif
 
 %package -n	%{devname}
 Summary:	The library and header files for development using S-Lang
@@ -131,15 +145,16 @@ cp -r autoconf configure doc demo mkfiles modules slang.lis slsh src utf8 change
 pushd diet
 CC="diet gcc" CFLAGS="-Os -g" \
 ./configure
-%make -C src/ static
+make -C src/ static
 popd
 %endif
 
 %if %{with uclibc}
 pushd uclibc
 CC="%{uclibc_cc}" CFLAGS="%{uclibc_cflags}" \
-./configure
-%make -C src/ static
+%configure2_5x	--prefix=%{uclibc_root} \
+		--libdir=%{uclibc_root}%{_libdir}
+make -C src/ static $PWD/src/elfobjs/libslang.so.%{version}
 popd
 %endif
 
@@ -160,7 +175,8 @@ install -m644 diet/src/objs/libslang.a -D %{buildroot}%{_prefix}/lib/dietlibc/li
 %endif
 
 %if %{with uclibc}
-install -m644 uclibc/src/objs/libslang.a -D %{buildroot}%{_prefix}/uclibc%{_libdir}/libslang.a
+install -m644 uclibc/src/objs/libslang.a -D %{buildroot}%{uclibc_root}%{_libdir}/libslang.a
+cp -a uclibc/src/elfobjs/libslang.so* %{buildroot}%{uclibc_root}%{_libdir}
 %endif
 
 %files -n %{modules}
@@ -170,8 +186,16 @@ install -m644 uclibc/src/objs/libslang.a -D %{buildroot}%{_prefix}/uclibc%{_libd
 %files -n %{libname}
 %{_libdir}/libslang.so.%{major}*
 
+%if %{with uclibc}
+%files -n uclibc-%{libname}
+%{uclibc_root}%{_libdir}/libslang.so.%{major}*
+%endif
+
 %files -n %{devname}
 %{_libdir}/libslang.so
+%if %{with uclibc}
+%{uclibc_root}%{_libdir}/libslang.so
+%endif
 %dir %{_includedir}/slang/
 %{_includedir}/slang/*.h
 %{_libdir}/pkgconfig/slang.pc
