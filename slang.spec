@@ -143,17 +143,17 @@ cp -r autoconf configure doc demo mkfiles modules slang.lis slsh src utf8 change
 %build
 %if %{with diet}
 pushd diet
-CC="diet gcc" CFLAGS="-Os -g" \
-./configure
+./configure \
+CC="diet gcc" CFLAGS="-Os -g"
 make -C src/ static
 popd
 %endif
 
 %if %{with uclibc}
 pushd uclibc
-CC="%{uclibc_cc}" CFLAGS="%{uclibc_cflags}" \
 %configure2_5x	--prefix=%{uclibc_root} \
-		--libdir=%{uclibc_root}%{_libdir}
+		--libdir=%{uclibc_root}%{_libdir} \
+		CC="%{uclibc_cc}" CFLAGS="%{uclibc_cflags}"
 make -C src/ static $PWD/src/elfobjs/libslang.so.%{version}
 popd
 %endif
