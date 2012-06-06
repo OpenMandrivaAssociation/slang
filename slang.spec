@@ -14,7 +14,7 @@
 Summary:	The shared library for the S-Lang extension language
 Name:		slang
 Version:	2.2.4
-Release:	5
+Release:	6
 License:	GPLv2+
 Group:		System/Libraries
 URL:		http://www.s-lang.org
@@ -118,7 +118,6 @@ to recode S-Lang procedures in C if you need to.
 %package	slsh
 Summary:	S-Lang script interpreter
 Group:		Shells
-Provides:	%{_bindir}/slsh
 
 %description	slsh
 slsh is a program that embeds the S-Lang interpreter and may be used
