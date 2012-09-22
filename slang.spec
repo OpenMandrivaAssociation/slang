@@ -185,7 +185,7 @@ install -m644 diet/src/objs/libslang.a -D %{buildroot}%{_prefix}/lib/dietlibc/li
 %endif
 
 install -d %{buildroot}%{_prefix}/src/slang
-cp Makefile src/*.{c,h,inc} %{buildroot}%{_prefix}/src/slang
+cp src/Makefile src/*.{c,h,inc} %{buildroot}%{_prefix}/src/slang
 
 %if !%{with uclibc}
 cp src/config.h %{buildroot}%{_prefix}/src/slang
