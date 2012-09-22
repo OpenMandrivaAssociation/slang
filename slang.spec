@@ -14,7 +14,7 @@
 Summary:	The shared library for the S-Lang extension language
 Name:		slang
 Version:	2.2.4
-Release:	6
+Release:	7
 License:	GPLv2+
 Group:		System/Libraries
 URL:		http://www.s-lang.org
@@ -32,7 +32,7 @@ BuildRequires:	onig-devel
 BuildRequires:	dietlibc-devel
 %endif
 %if %{with uclibc}
-BuildRequires:	uClibc-devel >= 0.9.33.2-3
+BuildRequires:	uClibc-devel >= 0.9.33.2-9
 %endif
 
 %description
@@ -152,7 +152,7 @@ popd
 pushd uclibc
 %configure2_5x	--prefix=%{uclibc_root} \
 		--libdir=%{uclibc_root}%{_libdir} \
-		CC="%{uclibc_cc}" CFLAGS="%{uclibc_cflags}"
+		CC="%{uclibc_cc}" CFLAGS="%{uclibc_cflags}" LDFLAGS="%{ldflags} -Wl,-O2"
 make -C src/ static $PWD/src/elfobjs/libslang.so.%{version}
 popd
 %endif
