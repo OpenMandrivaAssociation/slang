@@ -102,6 +102,17 @@ Provides:	%{name}-static-devel = %{EVRD}
 %description -n	%{static}
 Static development files for %{name}.
 
+%package	source
+Summary:	Source code %{name}
+Group:		Development/C
+Requires:	%{devname} = %{EVRD}
+
+%description	source
+This package contain source code for the slang library.
+
+%description -n	%{static}
+Static development files for %{name}.
+
 %package	doc
 Summary:	Extra documentation for slang libraries
 Group:		Books/Computer books
@@ -173,7 +184,13 @@ make check
 install -m644 diet/src/objs/libslang.a -D %{buildroot}%{_prefix}/lib/dietlibc/lib-%{_arch}/libslang.a
 %endif
 
-%if %{with uclibc}
+install -d %{buildroot}%{_prefix}/src/slang
+cp Makefile src/*.{c,h,inc} %{buildroot}%{_prefix}/src/slang
+
+%if !%{with uclibc}
+cp src/config.h %{buildroot}%{_prefix}/src/slang
+%else
+cp uclibc/src/config.h %{buildroot}%{_prefix}/src/slang
 install -m644 uclibc/src/objs/libslang.a -D %{buildroot}%{uclibc_root}%{_libdir}/libslang.a
 cp -a uclibc/src/elfobjs/libslang.so* %{buildroot}%{uclibc_root}%{_libdir}
 %endif
@@ -207,6 +224,13 @@ cp -a uclibc/src/elfobjs/libslang.so* %{buildroot}%{uclibc_root}%{_libdir}
 %if %{with uclibc}
 %{_prefix}/uclibc%{_libdir}/libslang.a
 %endif
+
+%files source
+%dir %{_prefix}/src/slang
+%{_prefix}/src/slang/Makefile
+%{_prefix}/src/slang/*.c
+%{_prefix}/src/slang/*.h
+%{_prefix}/src/slang/*.inc
 
 %files doc
 %{_defaultdocdir}/slang
