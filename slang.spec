@@ -14,7 +14,7 @@
 Summary:	The shared library for the S-Lang extension language
 Name:		slang
 Version:	2.2.4
-Release:	7
+Release:	8
 License:	GPLv2+
 Group:		System/Libraries
 URL:		http://www.s-lang.org
@@ -83,6 +83,9 @@ Summary:	The library and header files for development using S-Lang
 Group:		Development/C
 Provides:	%{name}-devel = %{EVRD}
 Requires:	%{libname} = %{EVRD}
+%if %{with uclibc}
+Requires:	uclibc-%{libname} = %{version}
+%endif
 
 %description -n	%{devname}
 This package contains the S-Lang extension language libraries and
