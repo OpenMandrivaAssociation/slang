@@ -32,7 +32,7 @@ BuildRequires:	onig-devel
 BuildRequires:	dietlibc-devel
 %endif
 %if %{with uclibc}
-BuildRequires:	uClibc-devel >= 0.9.33.2-9
+BuildRequires:	uClibc-devel >= 0.9.33.2-15
 %endif
 
 %description
