@@ -19,7 +19,6 @@ License:	GPLv2+
 Group:		System/Libraries
 URL:		http://www.s-lang.org
 Source0:	ftp://ftp.fu-berlin.de/pub/unix/misc/slang/v%{major}.%{minor}/slang-%{version}.tar.bz2
-Source1:	%{SOURCE0}.asc
 Patch5:		slang-2.2.4-slsh-makefile.patch
 Patch6:		slang-2.2.4-modules-makefile.patch
 Patch7:		slang-2.2.4-perms.patch
