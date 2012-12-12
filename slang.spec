@@ -14,7 +14,7 @@
 Summary:	The shared library for the S-Lang extension language
 Name:		slang
 Version:	2.2.4
-Release:	8
+Release:	9
 License:	GPLv2+
 Group:		System/Libraries
 URL:		http://www.s-lang.org
@@ -246,6 +246,9 @@ cp -a uclibc/src/elfobjs/libslang.so* %{buildroot}%{uclibc_root}%{_libdir}
 %config(noreplace) %{_sysconfdir}/slsh.rc
 
 %changelog
+* Wed Dec 12 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 2.2.4-9
+- rebuild on ABF
+
 * Sun Oct 28 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 2.2.4-8
 + Revision: 820096
 - add dependency on uclibc library package for devel package
