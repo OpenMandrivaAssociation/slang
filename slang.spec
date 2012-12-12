@@ -244,3 +244,72 @@ cp -a uclibc/src/elfobjs/libslang.so* %{buildroot}%{uclibc_root}%{_libdir}
 %{_datadir}/slsh
 %{_mandir}/man1/slsh.1*
 %config(noreplace) %{_sysconfdir}/slsh.rc
+
+%changelog
+* Sun Oct 28 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 2.2.4-8
++ Revision: 820096
+- add dependency on uclibc library package for devel package
+- create a slang-source package with the source made available for others
+  packages to compile it in with -fwhole-program
+- build against latest uClibc for locale support
+
+* Wed Jun 06 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 2.2.4-6
++ Revision: 802829
+- drop unused %%{_bindir}/slsh provides
+- fix linking against uclibc
+
+* Wed Jun 06 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 2.2.4-5
++ Revision: 802824
+- build uclibc dynamically linked version of library
+
+* Thu May 24 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 2.2.4-4
++ Revision: 800342
+- add conditional buildrequires on dietlibc-devel & uClibc-devel
+- build static library version against uclibc & diet
+
+* Wed Mar 07 2012 Per Øyvind Karlsen <peroyvind@mandriva.org> 2.2.4-3
++ Revision: 782937
+- parallel build seems flakey, disable it for now..
+- fix conffile-without-noreplace-flag
+- split out modules into separate package
+- use pkgconfig() deps for buildrequires
+- fix build of libpng, libpcre, libonig & libz module & enable unconditionally
+- get rid of rpath (P8)
+- install libraries with executable permissions (P7, from Fedora)
+- use %%{EVRD} macro
+- drop ancient obsoletes
+- drop excessive provides
+- remove buildconflicts on slang-devel
+- cleanups
+
+* Tue Feb 07 2012 Dmitry Mikhirev <dmikhirev@mandriva.org> 2.2.4-2
++ Revision: 771692
+- rebuild for new pcre
+
+* Tue Sep 13 2011 Tomasz Pawel Gajc <tpg@mandriva.org> 2.2.4-1
++ Revision: 699605
+- update to new version 2.2.4
+- drop old pacthes
+- Patch 5 and 6 : link against source slang library
+- disable parallel build
+
+  + Lonyai Gergely <aleph@mandriva.org>
+    - rebuild
+
+* Fri May 06 2011 Oden Eriksson <oeriksson@mandriva.com> 2.2.2-3
++ Revision: 669985
+- mass rebuild
+
+  + Funda Wang <fwang@mandriva.org>
+    - tighten BR
+
+* Fri Dec 03 2010 Oden Eriksson <oeriksson@mandriva.com> 2.2.2-2mdv2011.0
++ Revision: 607541
+- rebuild
+
+* Thu Dec 31 2009 Tomasz Pawel Gajc <tpg@mandriva.org> 2.2.2-1mdv2010.1
++ Revision: 484500
+- update to new version 2.2.2
+- drop patch 3, fixed upstream
+- rediff patch 2
+
