@@ -23,10 +23,11 @@ Patch5:		slang-2.2.4-slsh-makefile.patch
 Patch6:		slang-2.2.4-modules-makefile.patch
 Patch7:		slang-2.2.4-perms.patch
 Patch8:		slang-2.2.4-no-rpath.patch
+BuildRequires:	libtool
+BuildRequires:	readline-devel
 %if %{with png}
 BuildRequires:	pkgconfig(libpng)
 %endif
-BuildRequires:	libtool
 %if %{with pcre}
 BuildRequires:	pkgconfig(libpcre)
 %endif
@@ -169,14 +170,12 @@ popd
 
 %if %{with uclibc}
 pushd uclibc
-%configure2_5x	--prefix=%{uclibc_root} \
-		--libdir=%{uclibc_root}%{_libdir} \
-		CC="%{uclibc_cc}" CFLAGS="%{uclibc_cflags}" LDFLAGS="%{ldflags} -Wl,-O2"
+%uclibc_configure --with-readline=gnu
 make -C src/ static $PWD/src/elfobjs/libslang.so.%{version}
 popd
 %endif
 
-%configure2_5x	\
+%configure2_5x	--with-readline=gnu \
 %if %{with pcre}
 		--with-pcrelib=%{_libdir} \
 		--with-pcreinc=%{_includedir} \
