@@ -23,10 +23,16 @@ Patch5:		slang-2.2.4-slsh-makefile.patch
 Patch6:		slang-2.2.4-modules-makefile.patch
 Patch7:		slang-2.2.4-perms.patch
 Patch8:		slang-2.2.4-no-rpath.patch
+%if %{with png}
 BuildRequires:	pkgconfig(libpng)
+%endif
 BuildRequires:	libtool
+%if %{with pcre}
 BuildRequires:	pkgconfig(libpcre)
+%endif
+%if %{with onig}
 BuildRequires:	onig-devel
+%eidf
 %if %{with diet}
 BuildRequires:	dietlibc-devel
 %endif
@@ -170,8 +176,21 @@ make -C src/ static $PWD/src/elfobjs/libslang.so.%{version}
 popd
 %endif
 
-%configure2_5x	--with-{onig,pcre,png,z}lib=%{_libdir} \
-		--with-{onig,pcre,png,z}inc=%{_includedir} \
+%configure2_5x	\
+%if %{with pcre}
+		--with-pcrelib=%{_libdir} \
+		--with-pcreinc=%{_includedir} \
+%endif
+%if %{with png}
+		--with-pnglib=%{_libdir} \
+		--with-pnginc=%{_includedir} \
+%endif
+%if %{with onig}
+		--with-oniglib=%{_libdir} \
+		--with-oniginc=%{_includedir} \
+%endif
+		--with-zlib=%{_libdir} \
+		--with-zinc=%{_includedir} \
 		--includedir=%{_includedir}/slang
 
 make
