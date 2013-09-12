@@ -23,6 +23,7 @@ Patch5:		slang-2.2.4-slsh-makefile.patch
 Patch6:		slang-2.2.4-modules-makefile.patch
 Patch7:		slang-2.2.4-perms.patch
 Patch8:		slang-2.2.4-no-rpath.patch
+Patch9:		slang-2.2.4-drop-inline-for-fwhole-program-usage-elsewhere.patch
 BuildRequires:	libtool
 BuildRequires:	readline-devel
 %if %{with png}
@@ -206,6 +207,9 @@ install -m644 diet/src/objs/libslang.a -D %{buildroot}%{_prefix}/lib/dietlibc/li
 
 install -d %{buildroot}%{_prefix}/src/slang
 cp src/Makefile src/*.{c,h,inc} %{buildroot}%{_prefix}/src/slang
+pushd %{buildroot}%{_prefix}/src/slang
+%patch9 -p2
+popd
 
 %if !%{with uclibc}
 cp src/config.h %{buildroot}%{_prefix}/src/slang
