@@ -218,7 +218,7 @@ cp uclibc/src/config.h %{buildroot}%{_usrsrc}/slang/config-uclibc.h
 install -m644 uclibc/src/objs/libslang.a -D %{buildroot}%{uclibc_root}%{_libdir}/libslang.a
 cp -a uclibc/src/elfobjs/libslang.so* %{buildroot}%{uclibc_root}%{_libdir}
 %endif
-cat < %{buildroot}%{_usrsrc}/slang/config.h <<EOF
+cat > %{buildroot}%{_usrsrc}/slang/config.h <<EOF
 #if defined(__UCLIBC__)
 #include "config-uclibc.h"
 #elif defined(__dietlibc__)
