@@ -203,22 +203,22 @@ make check
 
 %if %{with diet}
 install -m644 diet/src/objs/libslang.a -D %{buildroot}%{_prefix}/lib/dietlibc/lib-%{_arch}/libslang.a
-install -m644 diet/src/config.h -D %{buildroot}%{_prefix}/src/slang/config-diet.h
+install -m644 diet/src/config.h -D %{buildroot}%{_usrsrc}/slang/config-diet.h
 %endif
 
-install -d %{buildroot}%{_prefix}/src/slang
-cp src/Makefile src/*.{c,h,inc} %{buildroot}%{_prefix}/src/slang
-pushd %{buildroot}%{_prefix}/src/slang
+install -d %{buildroot}%{_usrsrc}/slang
+cp src/Makefile src/*.{c,h,inc} %{buildroot}%{_usrsrc}/slang
+pushd %{buildroot}%{_usrsrc}/slang
 %patch9 -p2
 popd
 
-cp src/config.h %{buildroot}%{_prefix}/src/slang/config-glibc.h
+cp src/config.h %{buildroot}%{_usrsrc}/slang/config-glibc.h
 %if %{with uclibc}
-cp uclibc/src/config.h %{buildroot}%{_prefix}/src/slang/config-uclibc.h
+cp uclibc/src/config.h %{buildroot}%{_usrsrc}/slang/config-uclibc.h
 install -m644 uclibc/src/objs/libslang.a -D %{buildroot}%{uclibc_root}%{_libdir}/libslang.a
 cp -a uclibc/src/elfobjs/libslang.so* %{buildroot}%{uclibc_root}%{_libdir}
 %endif
-cat < %{buildroot}%{_prefix}/src/slang/config.h <<EOF
+cat < %{buildroot}%{_usrsrc}/slang/config.h <<EOF
 #if defined(__UCLIBC__)
 #include "config-uclibc.h"
 #elif defined(__dietlibc__)
@@ -259,11 +259,11 @@ EOF
 %endif
 
 %files source
-%dir %{_prefix}/src/slang
-%{_prefix}/src/slang/Makefile
-%{_prefix}/src/slang/*.c
-%{_prefix}/src/slang/*.h
-%{_prefix}/src/slang/*.inc
+%dir %{_usrsrc}/slang
+%{_usrsrc}/slang/Makefile
+%{_usrsrc}/slang/*.c
+%{_usrsrc}/slang/*.h
+%{_usrsrc}/slang/*.inc
 
 %files doc
 %{_defaultdocdir}/slang
