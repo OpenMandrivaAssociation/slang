@@ -8,7 +8,7 @@
 %bcond_without	pcre
 %bcond_without	png
 %bcond_with	onig
-%bcond_without	diet
+%bcond_without	dietlibc
 %bcond_without	uclibc
 
 Summary:	The shared library for the S-Lang extension language
