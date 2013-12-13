@@ -23,6 +23,7 @@ Patch5:		slang-2.2.4-slsh-makefile.patch
 Patch6:		slang-2.2.4-modules-makefile.patch
 Patch7:		slang-2.2.4-perms.patch
 Patch8:		slang-2.2.4-no-rpath.patch
+Patch9:		slang-2.2.4-aarch64.patch
 BuildRequires:	pkgconfig(libpng)
 BuildRequires:	libtool
 BuildRequires:	pkgconfig(libpcre)
@@ -142,6 +143,8 @@ to test slang scripts.
 %patch6 -p1
 %patch7 -p1 -b .lib_exec~
 %patch8 -p1 -b .norpath~
+%patch9 -p1 -b .aarch~
+
 %if %{with diet}
 mkdir diet
 cp -r autoconf configure doc demo mkfiles modules slang.lis slsh src utf8 changes.txt COPYING diet
