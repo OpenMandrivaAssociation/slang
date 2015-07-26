@@ -13,18 +13,15 @@
 
 Summary:	The shared library for the S-Lang extension language
 Name:		slang
-Version:	2.2.4
-Release:	20
+Version:	2.3.0
+Release:	1
 License:	GPLv2+
 Group:		System/Libraries
 URL:		http://www.s-lang.org
-Source0:	ftp://ftp.fu-berlin.de/pub/unix/misc/slang/v%{major}.%{minor}/slang-%{version}.tar.bz2
+Source0:	http://www.jedsoft.org/releases/slang/%{name}-%{version}.tar.bz2
 Source1:	%{name}.rpmlintrc
-Patch5:		slang-2.2.4-slsh-makefile.patch
-Patch6:		slang-2.2.4-modules-makefile.patch
-Patch7:		slang-2.2.4-perms.patch
-Patch8:		slang-2.2.4-no-rpath.patch
-Patch9:		slang-2.2.4-aarch64.patch
+Patch1:		slang-2.2.4-modules-makefile.patch
+Patch2:		slang-2.2.4-perms.patch
 BuildRequires:	pkgconfig(libpng)
 BuildRequires:	libtool
 BuildRequires:	pkgconfig(libpcre)
@@ -154,11 +151,7 @@ to test slang scripts.
 
 %prep
 %setup -q
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1 -b .lib_exec~
-%patch8 -p1 -b .norpath~
-%patch9 -p1 -b .aarch~
+%apply_patches
 
 %if %{with diet}
 mkdir diet
