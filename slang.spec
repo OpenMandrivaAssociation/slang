@@ -20,6 +20,7 @@ Group:		System/Libraries
 URL:		http://www.s-lang.org
 Source0:	http://www.jedsoft.org/releases/slang/%{name}-%{version}.tar.bz2
 Source1:	%{name}.rpmlintrc
+Patch0:		slang-2.2.3-slsh-libs.patch
 Patch1:		slang-2.2.4-modules-makefile.patch
 Patch2:		slang-2.2.4-perms.patch
 BuildRequires:	pkgconfig(libpng)
