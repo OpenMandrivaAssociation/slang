@@ -9,12 +9,12 @@
 %bcond_without	png
 %bcond_with	onig
 %bcond_without	dietlibc
-%bcond_without	uclibc
+%bcond_with	uclibc
 
 Summary:	The shared library for the S-Lang extension language
 Name:		slang
 Version:	2.3.0
-Release:	1
+Release:	2
 License:	GPLv2+
 Group:		System/Libraries
 URL:		http://www.s-lang.org
