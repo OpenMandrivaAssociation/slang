@@ -14,7 +14,7 @@
 Summary:	The shared library for the S-Lang extension language
 Name:		slang
 Version:	2.3.0
-Release:	2
+Release:	3
 License:	GPLv2+
 Group:		System/Libraries
 URL:		http://www.s-lang.org
