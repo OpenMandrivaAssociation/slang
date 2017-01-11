@@ -1,0 +1,11 @@
+--- slang-2.2.4/src/slarray.c~	2011-04-11 04:37:07.000000000 +0200
++++ slang-2.2.4/src/slarray.c	2013-09-12 17:36:25.296846490 +0200
+@@ -1652,7 +1652,7 @@ aput_transfer_n_elems (SLang_Array_Type
+    return 0;
+ }
+ 
+-_INLINE_ int
++int
+ _pSLarray_aput_transfer_elem (SLang_Array_Type *at, SLindex_Type *indices,
+ 			     VOID_STAR data_to_put, size_t sizeof_type, int is_ptr)
+ {

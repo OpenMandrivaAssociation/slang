@@ -7,26 +7,35 @@
 
 %bcond_without	pcre
 %bcond_without	png
-%bcond_with	onig
+%bcond_without	onig
 %bcond_without	dietlibc
 %bcond_with	uclibc
 
 Summary:	The shared library for the S-Lang extension language
 Name:		slang
-Version:	2.3.0
-Release:	4
+Version:	2.3.1a
+Release:	1
 License:	GPLv2+
 Group:		System/Libraries
 URL:		http://www.s-lang.org
 Source0:	http://www.jedsoft.org/releases/slang/%{name}-%{version}.tar.bz2
 Source1:	%{name}.rpmlintrc
-Patch0:		slang-2.2.3-slsh-libs.patch
-Patch1:		slang-2.2.4-modules-makefile.patch
+Patch0:		slang-2.3.1a-slsh-libs.patch
+Patch1:		slang-2.3.1a-modules-makefile.patch
 Patch2:		slang-2.2.4-perms.patch
+Patch3:		slang-2.2.4-drop-inline-for-fwhole-program-usage-elsewhere.patch
 BuildRequires:	pkgconfig(libpng)
 BuildRequires:	libtool
+BuildRequires:	readline-devel
+%if %{with png}
+BuildRequires:	pkgconfig(libpng)
+%endif
+%if %{with pcre}
 BuildRequires:	pkgconfig(libpcre)
+%endif
+%if %{with onig}
 BuildRequires:	onig-devel
+%endif
 %if %{with diet}
 BuildRequires:	dietlibc-devel
 %endif
@@ -152,7 +161,9 @@ to test slang scripts.
 
 %prep
 %setup -q
-%apply_patches
+%patch0 -p1 -b .slsh~
+%patch1 -p1 -b .modules~
+%patch2 -p1 -b .perms~
 
 %if %{with diet}
 mkdir diet
@@ -175,9 +186,7 @@ popd
 
 %if %{with uclibc}
 pushd uclibc
-%configure2_5x	--prefix=%{uclibc_root} \
-		--libdir=%{uclibc_root}%{_libdir} \
-		CC="%{uclibc_cc}" CFLAGS="%{uclibc_cflags}" LDFLAGS="%{ldflags} -Wl,-O2"
+%uclibc_configure --with-readline=gnu
 make -C src/ static $PWD/src/elfobjs/libslang.so.%{version}
 popd
 %endif
@@ -196,18 +205,31 @@ make check
 
 %if %{with diet}
 install -m644 diet/src/objs/libslang.a -D %{buildroot}%{_prefix}/lib/dietlibc/lib-%{_arch}/libslang.a
+install -m644 diet/src/config.h -D %{buildroot}%{_usrsrc}/slang/config-diet.h
 %endif
 
-install -d %{buildroot}%{_prefix}/src/slang
-cp src/Makefile src/*.{c,h,inc} %{buildroot}%{_prefix}/src/slang
+install -d %{buildroot}%{_usrsrc}/slang
+cp src/Makefile src/*.{c,h,inc} %{buildroot}%{_usrsrc}/slang
+pushd %{buildroot}%{_usrsrc}/slang
+patch -i %{PATCH3} -p2
+popd
 
-%if !%{with uclibc}
-cp src/config.h %{buildroot}%{_prefix}/src/slang
-%else
-cp uclibc/src/config.h %{buildroot}%{_prefix}/src/slang
+cp src/config.h %{buildroot}%{_usrsrc}/slang/config-glibc.h
+%if %{with uclibc}
+cp uclibc/src/config.h %{buildroot}%{_usrsrc}/slang/config-uclibc.h
 install -m644 uclibc/src/objs/libslang.a -D %{buildroot}%{uclibc_root}%{_libdir}/libslang.a
 cp -a uclibc/src/elfobjs/libslang.so* %{buildroot}%{uclibc_root}%{_libdir}
 %endif
+cat > %{buildroot}%{_usrsrc}/slang/config.h <<EOF
+#include <features.h>
+#if defined(__UCLIBC__)
+#include "config-uclibc.h"
+#elif defined(__dietlibc__)
+#include "config-diet.h"
+#elif defined(__GLIBC__)
+#include "config-glibc.h"
+#endif
+EOF
 
 %files -n %{modules}
 %dir %{_libdir}/slang
@@ -238,11 +260,11 @@ cp -a uclibc/src/elfobjs/libslang.so* %{buildroot}%{uclibc_root}%{_libdir}
 %endif
 
 %files source
-%dir %{_prefix}/src/slang
-%{_prefix}/src/slang/Makefile
-%{_prefix}/src/slang/*.c
-%{_prefix}/src/slang/*.h
-%{_prefix}/src/slang/*.inc
+%dir %{_usrsrc}/slang
+%{_usrsrc}/slang/Makefile
+%{_usrsrc}/slang/*.c
+%{_usrsrc}/slang/*.h
+%{_usrsrc}/slang/*.inc
 
 %files doc
 %{_defaultdocdir}/slang
