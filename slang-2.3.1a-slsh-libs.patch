@@ -1,0 +1,12 @@
+diff -up slang-2.3.1a/slsh/Makefile.in.0000̃ slang-2.3.1a/slsh/Makefile.in
+--- "slang-2.3.1a/slsh/Makefile.in.0000\314\203"	2017-01-11 13:52:51.335650965 +0100
++++ slang-2.3.1a/slsh/Makefile.in	2017-01-11 13:54:15.228647464 +0100
+@@ -92,7 +92,7 @@ slsh: $(OBJDIR)/slsh
+ $(OBJDIR)/slsh_exe: $(OBJDIR)/slsh.o $(OBJDIR)/readline.o
+ 	$(CC) $(CFLAGS) $(OBJDIR)/slsh.o $(OBJDIR)/readline.o -o $(OBJDIR)/slsh_exe $(LDFLAGS) $(DLINK_FLAGS) $(SRC_LIBS)
+ $(OBJDIR)/slsh: $(OBJDIR)/slsh.o $(OBJDIR)/readline.o
+-	$(CC) $(CFLAGS) $(OBJDIR)/slsh.o $(OBJDIR)/readline.o -o $(OBJDIR)/slsh $(LDFLAGS) $(DLINK_FLAGS) $(INST_LIBS)
++	$(CC) $(CFLAGS) $(OBJDIR)/slsh.o $(OBJDIR)/readline.o -o $(OBJDIR)/slsh $(LDFLAGS) $(DLINK_FLAGS) $(SRC_LIBS)
+ $(OBJDIR)/slsh.o: $(OBJDIR_TSTAMP) slsh.c slsh.h config.h Makefile
+ 	cd $(OBJDIR) && $(CC) $(SLANG_SRCINC) $(CFLAGS) -c $(DEFS) $(SRCDIR)/slsh.c
+ $(OBJDIR)/readline.o: $(OBJDIR_TSTAMP) readline.c slsh.h config.h Makefile

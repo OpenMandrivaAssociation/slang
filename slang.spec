@@ -7,25 +7,23 @@
 
 %bcond_without	pcre
 %bcond_without	png
-%bcond_with	onig
+%bcond_without	onig
 %bcond_without	dietlibc
 %bcond_with	uclibc
 
 Summary:	The shared library for the S-Lang extension language
 Name:		slang
-Version:	2.3.0
-Release:	4
+Version:	2.3.1a
+Release:	1
 License:	GPLv2+
 Group:		System/Libraries
 URL:		http://www.s-lang.org
-Source0:	ftp://ftp.fu-berlin.de/pub/unix/misc/slang/v%{major}.%{minor}/slang-%{version}.tar.bz2
 Source0:	http://www.jedsoft.org/releases/slang/%{name}-%{version}.tar.bz2
 Source1:	%{name}.rpmlintrc
-Patch0:		slang-2.2.3-slsh-libs.patch
-Patch1:		slang-2.2.4-modules-makefile.patch
+Patch0:		slang-2.3.1a-slsh-libs.patch
+Patch1:		slang-2.3.1a-modules-makefile.patch
 Patch2:		slang-2.2.4-perms.patch
-Patch3:		slang-2.2.4-no-rpath.patch
-Patch4:		slang-2.2.4-drop-inline-for-fwhole-program-usage-elsewhere.patch
+Patch3:		slang-2.2.4-drop-inline-for-fwhole-program-usage-elsewhere.patch
 BuildRequires:	pkgconfig(libpng)
 BuildRequires:	libtool
 BuildRequires:	readline-devel
@@ -163,7 +161,9 @@ to test slang scripts.
 
 %prep
 %setup -q
-%apply_patches
+%patch0 -p1 -b .slsh~
+%patch1 -p1 -b .modules~
+%patch2 -p1 -b .perms~
 
 %if %{with diet}
 mkdir diet
@@ -211,7 +211,7 @@ install -m644 diet/src/config.h -D %{buildroot}%{_usrsrc}/slang/config-diet.h
 install -d %{buildroot}%{_usrsrc}/slang
 cp src/Makefile src/*.{c,h,inc} %{buildroot}%{_usrsrc}/slang
 pushd %{buildroot}%{_usrsrc}/slang
-%patch9 -p2
+patch -i %{PATCH3} -p2
 popd
 
 cp src/config.h %{buildroot}%{_usrsrc}/slang/config-glibc.h
