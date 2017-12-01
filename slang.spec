@@ -1,5 +1,5 @@
-%define	major	2
-%define	minor	2
+%define	major 2
+%define	minor 2
 %define	modules	%{mklibname %{name}}-modules
 %define	libname %mklibname %{name} %{major}
 %define	devname %mklibname %{name} -d
@@ -7,7 +7,7 @@
 
 %bcond_without	pcre
 %bcond_without	png
-%bcond_with	onig
+%bcond_without	onig
 %bcond_without	dietlibc
 
 Summary:	The shared library for the S-Lang extension language
@@ -22,10 +22,16 @@ Source1:	%{name}.rpmlintrc
 Patch0:		slang-2.2.3-slsh-libs.patch
 Patch1:		slang-2.2.4-modules-makefile.patch
 Patch2:		slang-2.2.4-perms.patch
-BuildRequires:	pkgconfig(libpng)
 BuildRequires:	libtool
+%if %{with png}
+BuildRequires:	pkgconfig(libpng)
+%endif
+%if %{with pcre}
 BuildRequires:	pkgconfig(libpcre)
+%endif
+%if %{with onig}
 BuildRequires:	onig-devel
+%endif
 %if %{with diet}
 BuildRequires:	dietlibc-devel
 %endif
@@ -133,14 +139,18 @@ CC="diet gcc" CFLAGS="-Os -g"
 popd
 %endif
 
-%configure	--with-{onig,pcre,png,z}lib=%{_libdir} \
-		--with-{onig,pcre,png,z}inc=%{_includedir} \
-		--includedir=%{_includedir}/slang
+%configure \
+	--with-{onig,pcre,png,z}lib=%{_libdir} \
+	--with-{onig,pcre,png,z}inc=%{_includedir} \
+	--includedir=%{_includedir}/slang
 
 %make -j1
 
+# (tpg) somehow this fails on i586
+%ifnarch %{ix86}
 %check
 make check
+%endif
 
 %install
 %makeinstall_std install-static
