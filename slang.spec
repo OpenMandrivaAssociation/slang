@@ -5,6 +5,8 @@
 %define	devname %mklibname %{name} -d
 %define	static	%mklibname %{name} -s -d
 
+%define pre 23
+
 %bcond_without	pcre
 %bcond_without	png
 %bcond_without	onig
@@ -12,16 +14,21 @@
 
 Summary:	The shared library for the S-Lang extension language
 Name:		slang
-Version:	2.3.1a
+%if 0%{pre}
+Version:	2.3.2~pre%{pre}
+%define ver %(echo %{version} |cut -d~ -f1)
+Source0:	https://www.jedsoft.org/snapshots/slang-pre%{ver}-%{pre}.tar.gz
+%else
+Version:	2.3.2
+Source0:	http://www.jedsoft.org/releases/slang/%{name}-%{version}.tar.bz2
+%endif
 Release:	1
 License:	GPLv2+
 Group:		System/Libraries
 URL:		http://www.s-lang.org
-Source0:	http://www.jedsoft.org/releases/slang/%{name}-%{version}.tar.bz2
 Source1:	%{name}.rpmlintrc
 Patch0:		slang-2.2.3-slsh-libs.patch
 Patch1:		slang-2.2.4-modules-makefile.patch
-Patch2:		slang-2.2.4-perms.patch
 BuildRequires:	libtool
 %if %{with png}
 BuildRequires:	pkgconfig(libpng)
@@ -122,7 +129,11 @@ slsh is a program that embeds the S-Lang interpreter and may be used
 to test slang scripts.
 
 %prep
+%if 0%{pre}
+%setup -qn slang-pre%{ver}-%{pre}
+%else
 %setup -q
+%endif
 %apply_patches
 
 %if %{with diet}
