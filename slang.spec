@@ -15,14 +15,14 @@
 Summary:	The shared library for the S-Lang extension language
 Name:		slang
 %if 0%{pre}
-Version:	2.3.2~pre%{pre}
-%define ver %(echo %{version} |cut -d~ -f1)
-Source0:	https://www.jedsoft.org/snapshots/slang-pre%{ver}-%{pre}.tar.gz
+Version:	2.3.2
+Source0:	https://www.jedsoft.org/snapshots/slang-pre%{version}-%{pre}.tar.gz
+Release:	0.pre%{pre}
 %else
 Version:	2.3.2
 Source0:	http://www.jedsoft.org/releases/slang/%{name}-%{version}.tar.bz2
-%endif
 Release:	1
+%endif
 License:	GPLv2+
 Group:		System/Libraries
 URL:		http://www.s-lang.org
@@ -130,7 +130,7 @@ to test slang scripts.
 
 %prep
 %if 0%{pre}
-%setup -qn slang-pre%{ver}-%{pre}
+%setup -qn slang-pre%{version}-%{pre}
 %else
 %setup -q
 %endif
