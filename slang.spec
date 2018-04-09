@@ -5,7 +5,7 @@
 %define	devname %mklibname %{name} -d
 %define	static	%mklibname %{name} -s -d
 
-%define pre 23
+%define pre %{nil}
 
 %bcond_without	pcre
 %bcond_without	png
