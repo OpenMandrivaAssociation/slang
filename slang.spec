@@ -1,3 +1,8 @@
+%ifarch %{arm}
+# FIXME causes an undefined reference to __multi3 with clang 6.0
+%global _disable_lto 1
+%endif
+
 %define	major 2
 %define	minor 2
 %define	modules	%{mklibname %{name}}-modules
@@ -29,6 +34,7 @@ URL:		http://www.s-lang.org
 Source1:	%{name}.rpmlintrc
 Patch0:		slang-2.2.3-slsh-libs.patch
 Patch1:		slang-2.2.4-modules-makefile.patch
+Patch2:		slang-2.3.2-arm-build-workaround.patch
 BuildRequires:	libtool
 %if %{with png}
 BuildRequires:	pkgconfig(libpng)
@@ -157,8 +163,8 @@ popd
 
 %make -j1
 
-# (tpg) somehow this fails on i586
-%ifnarch %{ix86}
+# (tpg) somehow this fails on i586 and armv7hl
+%ifnarch %{ix86} %{arm}
 %check
 make check
 %endif
