@@ -3,19 +3,19 @@
 %global _disable_lto 1
 %endif
 
-%define	major 2
-%define	minor 2
-%define	modules	%{mklibname %{name}}-modules
-%define	libname %mklibname %{name} %{major}
-%define	devname %mklibname %{name} -d
-%define	static	%mklibname %{name} -s -d
+%define major 2
+%define minor 2
+%define modules %{mklibname %{name}}-modules
+%define libname %mklibname %{name} %{major}
+%define devname %mklibname %{name} -d
+%define static %mklibname %{name} -s -d
 
 %define pre %{nil}
 
-%bcond_without	pcre
-%bcond_without	png
-%bcond_without	onig
-%bcond_without	dietlibc
+%bcond_without pcre
+%bcond_without png
+%bcond_without onig
+%bcond_without dietlibc
 
 Summary:	The shared library for the S-Lang extension language
 Name:		slang
@@ -26,7 +26,7 @@ Release:	0.pre%{pre}
 %else
 Version:	2.3.2
 Source0:	http://www.jedsoft.org/releases/slang/%{name}-%{version}.tar.bz2
-Release:	2
+Release:	3
 %endif
 License:	GPLv2+
 Group:		System/Libraries
@@ -57,20 +57,20 @@ The S-Lang library, provided in this package, provides the S-Lang
 extension language.  S-Lang's syntax resembles C, which makes it easy
 to recode S-Lang procedures in C if you need to.
 
-%package -n	%{modules}
+%package -n %{modules}
 Summary:	Modules for the S-Lang extension language
 Group:		Development/Other
 Conflicts:	%{libname} < 2.2.4-3
 
-%description -n	%{modules}
+%description -n %{modules}
 This package contains the main modules for the S-Lang extension language.
 
-%package -n	%{libname}
+%package -n %{libname}
 Summary:	The shared library for the S-Lang extension language
 Group:		System/Libraries
 Requires:	%{modules} = %{EVRD}
 
-%description -n	%{libname}
+%description -n %{libname}
 S-Lang is an interpreted language and a programming library.  The
 S-Lang language was designed so that it can be easily embedded into
 a program to provide the program with a powerful extension language.
@@ -78,13 +78,13 @@ The S-Lang library, provided in this package, provides the S-Lang
 extension language.  S-Lang's syntax resembles C, which makes it easy
 to recode S-Lang procedures in C if you need to.
 
-%package -n	%{devname}
+%package -n %{devname}
 Summary:	The library and header files for development using S-Lang
 Group:		Development/C
 Provides:	%{name}-devel = %{EVRD}
 Requires:	%{libname} = %{EVRD}
 
-%description -n	%{devname}
+%description -n %{devname}
 This package contains the S-Lang extension language libraries and
 header files which you'll need if you want to develop S-Lang based
 applications.  Documentation which may help you write S-Lang based
@@ -93,31 +93,28 @@ applications is also included.
 Install the slang-devel package if you want to develop applications
 based on the S-Lang extension language.
 
-%package -n	%{static}
+%package -n %{static}
 Summary:	Static development files for %{name}
 Group:		Development/C
 Requires:	%{devname} = %{EVRD}
 Provides:	%{name}-static-devel = %{EVRD}
 
-%description -n	%{static}
+%description -n %{static}
 Static development files for %{name}.
 
-%package	source
+%package source
 Summary:	Source code %{name}
 Group:		Development/C
 Requires:	%{devname} = %{EVRD}
 
-%description	source
+%description source
 This package contain source code for the slang library.
 
-%description -n	%{static}
-Static development files for %{name}.
-
-%package	doc
+%package doc
 Summary:	Extra documentation for slang libraries
 Group:		Books/Computer books
 
-%description	doc
+%description doc
 This package contains documentation about S-Lang.
 S-Lang is an interpreted language and a programming library.  The
 S-Lang language was designed so that it can be easily embedded into
@@ -126,11 +123,11 @@ The S-Lang library, provided in this package, provides the S-Lang
 extension language.  S-Lang's syntax resembles C, which makes it easy
 to recode S-Lang procedures in C if you need to.
 
-%package	slsh
+%package slsh
 Summary:	S-Lang script interpreter
 Group:		Shells
 
-%description	slsh
+%description slsh
 slsh is a program that embeds the S-Lang interpreter and may be used
 to test slang scripts.
 
@@ -180,6 +177,8 @@ install -d %{buildroot}%{_prefix}/src/slang
 cp src/Makefile src/*.{c,h,inc} %{buildroot}%{_prefix}/src/slang
 
 cp src/config.h %{buildroot}%{_prefix}/src/slang
+
+strip --strip-debug --strip-unneeded %{buildroot}%{_libdir}/slang/v*/modules/*.so
 
 %files -n %{modules}
 %dir %{_libdir}/slang
