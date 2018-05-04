@@ -1,12 +1,11 @@
-diff -Naur slang-2.2.4//modules/Makefile.in slang-2.2.4.tpg//modules/Makefile.in
---- slang-2.2.4//modules/Makefile.in	2011-04-11 02:37:07.000000000 +0000
-+++ slang-2.2.4.tpg//modules/Makefile.in	2011-09-13 00:11:19.000000000 +0000
-@@ -24,7 +24,7 @@
- # On some systems, the module must be linked to the slang library,
+--- slang-2.3.1a/modules/Makefile.in.0001~	2017-11-29 13:22:28.947122037 +0100
++++ slang-2.3.1a/modules/Makefile.in	2017-11-29 13:23:17.377230661 +0100
+@@ -34,7 +34,7 @@ DLL_IMPLIB_NAME = @DLL_IMPLIB_NAME@
  # but not all do.  If you have such system, point SLANG_LIB to the
  # slang library, otherwise leave it blank.
+ ELFDIR          = @ELFDIR@
 -SLANG_LIB	= @SLANG_LIB_FOR_MODULES@
 +SLANG_LIB	= -L$(ELFDIR) -lslang
  
- #---------------------------------------------------------------------------
+ # ---------------------------------------------------------------------------
  # If building the PCRE module, you may need to set these

