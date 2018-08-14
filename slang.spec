@@ -26,7 +26,7 @@ Release:	0.pre%{pre}
 %else
 Version:	2.3.2
 Source0:	http://www.jedsoft.org/releases/slang/%{name}-%{version}.tar.bz2
-Release:	4
+Release:	5
 %endif
 License:	GPLv2+
 Group:		System/Libraries
@@ -69,6 +69,7 @@ This package contains the main modules for the S-Lang extension language.
 Summary:	The shared library for the S-Lang extension language
 Group:		System/Libraries
 Requires:	%{modules} = %{EVRD}
+Provides:	%{name} = %{EVRD}
 
 %description -n %{libname}
 S-Lang is an interpreted language and a programming library.  The
