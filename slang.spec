@@ -138,7 +138,7 @@ to test slang scripts.
 %else
 %setup -q
 %endif
-%apply_patches
+%autopatch -p1
 
 %if %{with diet}
 mkdir diet
