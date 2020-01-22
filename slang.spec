@@ -15,7 +15,6 @@
 %bcond_without pcre
 %bcond_without png
 %bcond_without onig
-%bcond_without dietlibc
 
 Summary:	The shared library for the S-Lang extension language
 Name:		slang
@@ -26,7 +25,7 @@ Release:	0.pre%{pre}
 %else
 Version:	2.3.2
 Source0:	http://www.jedsoft.org/releases/slang/%{name}-%{version}.tar.bz2
-Release:	6
+Release:	7
 %endif
 License:	GPLv2+
 Group:		System/Libraries
@@ -35,6 +34,11 @@ Source1:	%{name}.rpmlintrc
 Patch0:		slang-2.2.3-slsh-libs.patch
 Patch1:		slang-2.2.4-modules-makefile.patch
 Patch2:		slang-2.3.2-arm-build-workaround.patch
+# Fedora patches
+# don't use memcpy() on overlapping buffers
+Patch10:	slang-getkey-memmove.patch
+# disable test that fails with SIGHUP ignored
+Patch11:	slang-sighuptest.patch
 BuildRequires:	libtool
 %if %{with png}
 BuildRequires:	pkgconfig(libpng)
@@ -44,9 +48,6 @@ BuildRequires:	pkgconfig(libpcre)
 %endif
 %if %{with onig}
 BuildRequires:	onig-devel
-%endif
-%if %{with diet}
-BuildRequires:	dietlibc-devel
 %endif
 
 %description
@@ -140,26 +141,19 @@ to test slang scripts.
 %endif
 %autopatch -p1
 
-%if %{with diet}
-mkdir diet
-cp -r autoconf configure doc demo mkfiles modules slang.lis slsh src utf8 changes.txt COPYING diet
-%endif
+# fix permissions of installed modules
+sed -i '/^INSTALL_MODULE=/s/_DATA//' configure
+
+# disable test failing on 32-bit archs
+sed -i '/TEST_SCRIPTS_SLC = /s/array //' src/test/Makefile
 
 %build
-%if %{with diet}
-pushd diet
-./configure \
-CC="diet gcc" CFLAGS="-Os -g"
-%make -j1 -C src/ static
-popd
-%endif
-
 %configure \
 	--with-{onig,pcre,png,z}lib=%{_libdir} \
 	--with-{onig,pcre,png,z}inc=%{_includedir} \
 	--includedir=%{_includedir}/slang
 
-%make -j1
+%make_build -j1
 
 # (tpg) somehow this fails on i586 and armv7hl
 %ifnarch %{ix86} %{arm}
@@ -168,11 +162,7 @@ make check
 %endif
 
 %install
-%makeinstall_std install-static
-
-%if %{with diet}
-install -m644 diet/src/objs/libslang.a -D %{buildroot}%{_prefix}/lib/dietlibc/lib-%{_arch}/libslang.a
-%endif
+%make_install install-static
 
 install -d %{buildroot}%{_prefix}/src/slang
 cp src/Makefile src/*.{c,h,inc} %{buildroot}%{_prefix}/src/slang
@@ -196,9 +186,6 @@ strip --strip-debug --strip-unneeded %{buildroot}%{_libdir}/slang/v*/modules/*.s
 
 %files -n %{static}
 %{_libdir}/libslang.a
-%if %{with diet}
-%{_prefix}/lib/dietlibc/lib-%{_arch}/libslang.a
-%endif
 
 %files source
 %dir %{_prefix}/src/slang
