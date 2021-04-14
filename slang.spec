@@ -5,7 +5,6 @@
 
 %define major 2
 %define minor 2
-%define modules %{mklibname %{name}}-modules
 %define libname %mklibname %{name} %{major}
 %define devname %mklibname %{name} -d
 %define static %mklibname %{name} -s -d
@@ -25,7 +24,7 @@ Release:	0.pre%{pre}
 %else
 Version:	2.3.2
 Source0:	http://www.jedsoft.org/releases/slang/%{name}-%{version}.tar.bz2
-Release:	7
+Release:	8
 %endif
 License:	GPLv2+
 Group:		System/Libraries
@@ -58,19 +57,9 @@ The S-Lang library, provided in this package, provides the S-Lang
 extension language.  S-Lang's syntax resembles C, which makes it easy
 to recode S-Lang procedures in C if you need to.
 
-%package -n %{modules}
-Summary:	Modules for the S-Lang extension language
-Group:		Development/Other
-Conflicts:	%{libname} < 2.2.4-3
-
-%description -n %{modules}
-This package contains the main modules for the S-Lang extension language.
-
 %package -n %{libname}
 Summary:	The shared library for the S-Lang extension language
 Group:		System/Libraries
-Requires:	%{modules} = %{EVRD}
-Provides:	%{name} = %{EVRD}
 
 %description -n %{libname}
 S-Lang is an interpreted language and a programming library.  The
@@ -128,6 +117,9 @@ to recode S-Lang procedures in C if you need to.
 %package slsh
 Summary:	S-Lang script interpreter
 Group:		Shells
+Provides:	%{name} = %{EVRD}
+Obsoletes:	%{mklibname %{name}}-modules < 2.3.2-8
+Provides:	%{mklibname %{name}}-modules = 2.3.2-8
 
 %description slsh
 slsh is a program that embeds the S-Lang interpreter and may be used
@@ -171,10 +163,6 @@ cp src/config.h %{buildroot}%{_prefix}/src/slang
 
 strip --strip-debug --strip-unneeded %{buildroot}%{_libdir}/slang/v*/modules/*.so
 
-%files -n %{modules}
-%dir %{_libdir}/slang
-%{_libdir}/slang/v%{major}
-
 %files -n %{libname}
 %{_libdir}/libslang.so.%{major}*
 
@@ -200,6 +188,8 @@ strip --strip-debug --strip-unneeded %{buildroot}%{_libdir}/slang/v*/modules/*.s
 %files slsh
 %doc %{_docdir}/slsh
 %{_bindir}/slsh
+%dir %{_libdir}/slang
+%{_libdir}/slang/v%{major}
 %{_datadir}/slsh
 %{_mandir}/man1/slsh.1*
 %config(noreplace) %{_sysconfdir}/slsh.rc
