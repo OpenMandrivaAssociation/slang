@@ -24,7 +24,7 @@ Release:	0.pre%{pre}
 %else
 Version:	2.3.2
 Source0:	http://www.jedsoft.org/releases/slang/%{name}-%{version}.tar.bz2
-Release:	9
+Release:	10
 %endif
 License:	GPLv2+
 Group:		System/Libraries
