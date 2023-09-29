@@ -17,25 +17,22 @@
 
 Summary:	The shared library for the S-Lang extension language
 Name:		slang
+Version:	2.3.3
 %if 0%{pre}
-Version:	2.3.2
 Source0:	https://www.jedsoft.org/snapshots/slang-pre%{version}-%{pre}.tar.gz
 Release:	0.pre%{pre}
 %else
-Version:	2.3.2
 Source0:	http://www.jedsoft.org/releases/slang/%{name}-%{version}.tar.bz2
-Release:	10
+Release:	1
 %endif
 License:	GPLv2+
 Group:		System/Libraries
-URL:		http://www.s-lang.org
+URL:		http://jedsoft.org/slang/
 Source1:	%{name}.rpmlintrc
 Patch0:		slang-2.2.3-slsh-libs.patch
 Patch1:		slang-2.2.4-modules-makefile.patch
 Patch2:		slang-2.3.2-arm-build-workaround.patch
 # Fedora patches
-# don't use memcpy() on overlapping buffers
-Patch10:	slang-getkey-memmove.patch
 # disable test that fails with SIGHUP ignored
 Patch11:	slang-sighuptest.patch
 BuildRequires:	libtool
