@@ -36,6 +36,7 @@ Patch2:		slang-2.3.2-arm-build-workaround.patch
 # disable test that fails with SIGHUP ignored
 Patch11:	slang-sighuptest.patch
 BuildRequires:	libtool
+BuildRequires:	locales-extra-charsets
 %if %{with png}
 BuildRequires:	pkgconfig(libpng)
 %endif
