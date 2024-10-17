@@ -27,7 +27,7 @@ Release:	1
 %endif
 License:	GPLv2+
 Group:		System/Libraries
-URL:		http://jedsoft.org/slang/
+URL:		https://jedsoft.org/slang/
 Source1:	%{name}.rpmlintrc
 Patch0:		slang-2.2.3-slsh-libs.patch
 Patch1:		slang-2.2.4-modules-makefile.patch
